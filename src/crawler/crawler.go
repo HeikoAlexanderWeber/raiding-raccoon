@@ -1,10 +1,10 @@
 package crawler
 
 import (
+	"net/url"
 	"raiding-raccoon/src/graph"
 	"raiding-raccoon/src/loader"
 	"raiding-raccoon/src/parser"
-	"net/url"
 	"sync"
 
 	log "github.com/sirupsen/logrus"
@@ -51,7 +51,8 @@ func (crawler *Crawler) Enlist(uri *url.URL) {
 		if !crawler.filter(uri) {
 			return
 		}
-
+		// in every case, this will be a node
+		crawler.graph.AddNode(uri.String())
 		log.Infof("Enlisted: %v", uri.String())
 
 		// load data from given URI
