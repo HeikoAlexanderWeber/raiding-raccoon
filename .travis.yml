@@ -1,0 +1,27 @@
+jobs:
+  include:
+    - stage: build
+      # OS
+      os:
+      - linux
+      - osx
+      - windows
+      dist: trusty
+      sudo: false
+
+      language: go
+      go:
+      - 1.12.x
+      install: true
+
+      env:
+      # can be removed when using Go version 1.13
+      - GO111MODULE=on
+      
+      ### BEGIN LIFECYCLE ###
+      before_install:
+        - chmod -R +x ./
+        - sh scripts/setup.sh
+      script:
+        - make build
+      ### END LIFECYCLE ###

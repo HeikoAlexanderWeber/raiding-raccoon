@@ -53,7 +53,7 @@ func (graph *ConcurrentMapGraph) AddEdge(source string, dest string) bool {
 // Nodes func
 func (graph *ConcurrentMapGraph) Nodes(out chan<- string) {
 	defer close(out)
-	graph.data.IterCb(func(src string, v interface{}) {
+	graph.data.IterCb(func(src string, _ interface{}) {
 		out <- src
 	})
 }
@@ -73,7 +73,7 @@ func (graph *ConcurrentMapGraph) Edges(out chan<- Edge) {
 func (graph *ConcurrentMapGraph) IterateCb(cb func(string, string)) {
 	graph.data.IterCb(func(src string, v interface{}) {
 		subMap := v.(cmap.ConcurrentMap)
-		subMap.IterCb(func(dest string, v interface{}) {
+		subMap.IterCb(func(dest string, _ interface{}) {
 			cb(src, dest)
 		})
 	})

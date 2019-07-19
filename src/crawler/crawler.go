@@ -1,10 +1,10 @@
 package crawler
 
 import (
+	"net/url"
 	"raiding-raccoon/src/graph"
 	"raiding-raccoon/src/loader"
 	"raiding-raccoon/src/parser"
-	"net/url"
 	"sync"
 
 	log "github.com/sirupsen/logrus"
@@ -51,7 +51,8 @@ func (crawler *Crawler) Enlist(uri *url.URL) {
 		if !crawler.filter(uri) {
 			return
 		}
-
+		// in every case, this will be a node
+		crawler.graph.AddNode(uri.String())
 		log.Infof("Enlisted: %v", uri.String())
 
 		// load data from given URI
@@ -64,20 +65,24 @@ func (crawler *Crawler) Enlist(uri *url.URL) {
 		// parse all the links from the loaded data
 		links := make(chan *url.URL)
 		go crawler.parser.Parse(reader, links)
-		for link := range links {
-			newLink := *link
-			if newLink.Scheme == "" { // relative URL
-				newLink.Scheme = crawler.baseProtocol
-			}
-			if newLink.Host == "" { // relative URL
-				newLink.Host = crawler.baseDomain
-			}
-			// enlist all the new links
-			crawler.Enlist(&newLink)
-			// add the src->dest reference to the reference graph
-			crawler.graph.AddEdge(uri.String(), newLink.String())
-		}
+		crawler.handleNewLinks(uri, links)
 	}()
+}
+
+func (crawler *Crawler) handleNewLinks(uri *url.URL, data <-chan *url.URL) {
+	for link := range data {
+		newLink := *link
+		if newLink.Scheme == "" { // relative URL
+			newLink.Scheme = crawler.baseProtocol
+		}
+		if newLink.Host == "" { // relative URL
+			newLink.Host = crawler.baseDomain
+		}
+		// enlist all the new links
+		crawler.Enlist(&newLink)
+		// add the src->dest reference to the reference graph
+		crawler.graph.AddEdge(uri.String(), newLink.String())
+	}
 }
 
 // Wait func.
