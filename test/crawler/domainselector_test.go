@@ -1,8 +1,8 @@
 package crawler
 
 import (
-	"raiding-raccoon/src/crawler"
 	"net/url"
+	"raiding-raccoon/src/crawler"
 	"testing"
 
 	"gotest.tools/assert"

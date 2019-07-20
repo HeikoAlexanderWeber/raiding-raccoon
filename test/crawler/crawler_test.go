@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"net/url"
 	"raiding-raccoon/src/crawler"
 	"raiding-raccoon/src/graph"
-	"net/url"
 	"sort"
 	"testing"
 

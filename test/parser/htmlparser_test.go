@@ -3,8 +3,8 @@ package parser
 import (
 	"bytes"
 	"io/ioutil"
-	"raiding-raccoon/src/parser"
 	"net/url"
+	"raiding-raccoon/src/parser"
 	"testing"
 
 	"gotest.tools/assert"
