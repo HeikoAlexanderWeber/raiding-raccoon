@@ -56,5 +56,5 @@ jobs:
         - sh scripts/setup.sh
       script:
         - make cover
-        - sonar-scanner -Dsonar.login=${SONAR_TOKEN}
+        - sonar-scanner -Dsonar.login=${SONAR_TOKEN} -Dsonar.branch.name=${TRAVIS_BRANCH}
       ### END LIFECYCLE ###
