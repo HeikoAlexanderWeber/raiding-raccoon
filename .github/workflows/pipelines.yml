@@ -1,0 +1,28 @@
+name: Build & Scan
+on: [push]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build action
+      run: make docker-build
+
+  scan:
+    name: Scan
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup go
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13.x
+    - uses: actions/checkout@v1
+    - name: Install, test & cover
+      run: make install && make cover
+    - name: Sonar scan
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
