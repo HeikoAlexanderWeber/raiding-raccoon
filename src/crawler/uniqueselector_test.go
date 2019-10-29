@@ -2,14 +2,13 @@ package crawler
 
 import (
 	"net/url"
-	"raiding-raccoon/src/crawler"
 	"testing"
 
 	"gotest.tools/assert"
 )
 
 func TestUniqueSelector(t *testing.T) {
-	sel := crawler.UniqueSelector()
+	sel := UniqueSelector()
 	a, _ := url.Parse("https://test.com:80/about")
 	b, _ := url.Parse("https://testx.com:80/about")
 	c, _ := url.Parse("https://test.com:80/1")

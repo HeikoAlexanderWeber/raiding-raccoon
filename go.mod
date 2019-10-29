@@ -10,3 +10,5 @@ require (
 	golang.org/x/net v0.0.0-20190628185345-da137c7871d7
 	gotest.tools v2.2.0+incompatible
 )
+
+go 1.13

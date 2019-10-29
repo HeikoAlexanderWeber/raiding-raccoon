@@ -4,14 +4,13 @@ import (
 	"bytes"
 	"io/ioutil"
 	"net/url"
-	"raiding-raccoon/src/parser"
 	"testing"
 
 	"gotest.tools/assert"
 )
 
 func TestParseLinks(t *testing.T) {
-	p := parser.HTMLParser{}
+	p := HTMLParser{}
 	sampleData, _ := ioutil.ReadFile("sample_html.html")
 	reader := ioutil.NopCloser(bytes.NewReader(sampleData))
 

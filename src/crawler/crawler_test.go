@@ -6,7 +6,6 @@ import (
 	"io"
 	"io/ioutil"
 	"net/url"
-	"raiding-raccoon/src/crawler"
 	"raiding-raccoon/src/graph"
 	"sort"
 	"testing"
@@ -16,7 +15,7 @@ import (
 
 func TestCrawler(t *testing.T) {
 	g := graph.NewConcurrentMapGraph()
-	c := crawler.NewCrawler(
+	c := NewCrawler(
 		"", "",
 		&loaderMock{},
 		&parserMock{},
@@ -25,7 +24,7 @@ func TestCrawler(t *testing.T) {
 
 	// parserMock always returns the same mock URI which would
 	// lead to an infinite loop
-	c.UseSelector(crawler.UniqueSelector())
+	c.UseSelector(UniqueSelector())
 
 	uri0, _ := url.Parse("https://localhost:80/about")
 	c.Enlist(uri0)

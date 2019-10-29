@@ -2,14 +2,13 @@ package graph
 
 import (
 	"fmt"
-	"raiding-raccoon/src/graph"
 	"testing"
 
 	"gotest.tools/assert"
 )
 
 func TestAddNode(t *testing.T) {
-	graph := graph.NewConcurrentMapGraph()
+	graph := NewConcurrentMapGraph()
 	// Unique items are ok
 	assert.Assert(t, graph.AddNode("a"))
 	assert.Assert(t, graph.AddNode("b"))
@@ -18,7 +17,7 @@ func TestAddNode(t *testing.T) {
 }
 
 func TestAddEdge(t *testing.T) {
-	graph := graph.NewConcurrentMapGraph()
+	graph := NewConcurrentMapGraph()
 	assert.Assert(t, graph.AddEdge("a", "b"))
 	assert.Assert(t, !graph.AddEdge("a", "b"))
 	assert.Assert(t, graph.AddEdge("a", "c"))
@@ -26,7 +25,7 @@ func TestAddEdge(t *testing.T) {
 }
 
 func TestAddNodeAndCheckNodes(t *testing.T) {
-	graph := graph.NewConcurrentMapGraph()
+	graph := NewConcurrentMapGraph()
 	assert.Assert(t, graph.AddNode("a"))
 	assert.Assert(t, graph.AddNode("b"))
 	assert.Assert(t, !graph.AddNode("a"))
@@ -47,7 +46,7 @@ func TestAddNodeAndCheckNodes(t *testing.T) {
 }
 
 func TestAddEdgeAddsNodes(t *testing.T) {
-	graph := graph.NewConcurrentMapGraph()
+	graph := NewConcurrentMapGraph()
 	assert.Assert(t, graph.AddEdge("a", "b"))
 	assert.Assert(t, !graph.AddEdge("a", "b"))
 	assert.Assert(t, graph.AddEdge("a", "c"))
@@ -69,12 +68,12 @@ func TestAddEdgeAddsNodes(t *testing.T) {
 }
 
 func TestAddEdgeAndCheckEdges(t *testing.T) {
-	g := graph.NewConcurrentMapGraph()
+	g := NewConcurrentMapGraph()
 	assert.Assert(t, g.AddEdge("a", "b"))
 	assert.Assert(t, g.AddEdge("a", "c"))
 	assert.Assert(t, g.AddEdge("b", "a"))
 
-	edges := make(chan graph.Edge)
+	edges := make(chan Edge)
 	nodesdict := make(map[string]byte)
 	go g.Edges(edges)
 	for n := range edges {
@@ -91,7 +90,7 @@ func TestAddEdgeAndCheckEdges(t *testing.T) {
 }
 
 func TestIterateCb(t *testing.T) {
-	g := graph.NewConcurrentMapGraph()
+	g := NewConcurrentMapGraph()
 	assert.Assert(t, g.AddEdge("a", "b"))
 	assert.Assert(t, g.AddEdge("b", "c"))
 	assert.Assert(t, g.AddEdge("c", "a"))
