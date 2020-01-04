@@ -1,4 +1,4 @@
-name: Backend
+name: Default
 on: [push]
 
 jobs:
@@ -12,7 +12,7 @@ jobs:
         go-version: 1.13.x
     - uses: actions/checkout@v1
     - name: Install, test & cover
-      working-directory: ./backend/log
+      working-directory: ./raiding-raccoon
       run: make test
     - name: Sonar scan
       uses: sonarsource/sonarcloud-github-action@master
@@ -26,5 +26,5 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Build
-      working-directory: ./backend/log
+      working-directory: ./raiding-raccoon
       run: make docker-build

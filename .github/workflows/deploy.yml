@@ -19,7 +19,7 @@ jobs:
         RELEASE_BRANCHES: master
         DEFAULT_BUMP: patch
     - name: Build docker image
-      working-directory: ./backend/log
+      working-directory: ./raiding-raccoon
       run: VERSION=${{ steps.tag.outputs.tag }} make docker-build
     - name: Push docker image to Github packages (versioned tag)
       id: gpr-versioned
