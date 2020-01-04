@@ -31,10 +31,11 @@ For setting up the environment, just call `sh scripts/setup.sh`.
 
 * `make install` for downloading dependencies (done in `setup.sh`)
 * `make format` for formatting the code using `gofmt`
-* `make build` for building the program (UNIX: `bin/raiding-raccoon`, WIN32: `bin/raiding-raccoon.exe`)
+* `make docker-build` for building the production grade docker image
+* `make docker-build-debug` for building the debug docker image
 * `make test` for executing unit tests
+* `make bench` for executing benchmarks
 * `make cover` for generating an interactive coverage report
-* `make run` for running the program
 
 ## Dependencies
 
@@ -47,15 +48,12 @@ This project makes use of the following 3rd party dependencies:
 | orcaman/concurrent-map | [MIT](https://github.com/orcaman/concurrent-map/blob/master/LICENSE)      | [https://github.com/orcaman/concurrent-map](https://github.com/orcaman/concurrent-map) |
 | shabbyrobbe/xmlwriter  | [Apache 2.0](https://github.com/shabbyrobe/xmlwriter/blob/master/LICENSE) | [https://github.com/shabbyrobe/xmlwriter](https://github.com/shabbyrobe/xmlwriter)     |
 
-## Using this program
+## Running the container
 
-In order to use this program, go ahead and build an executable. After that is done, call the executable with the `--help` flag.\
-This will show all available argumentes for the program.\
-The most important flag is the `--start` flag. It defines, which URL the crawler starts at. The output will be in the GraphML format, written to the `STDOUT` pipe. In order to save the output, redirect `STDOUT` to a file (using the `>` operator). A few example calls can be found here:
+Following environment variables are used by the container:
 
-* `./bin/program --help`
-* `./bin/program --start https://github.com/HeikoAlexanderWeber > github.graphml`
-* `./bin/program --start https://cassini.de > cassini.graphml`
+* `RR_START_URL`\
+    This variable defines the URL that the crawler starts at. The output will be in the GraphML format, written to the `STDOUT` pipe of the container.
 
 ## Evaluating the output
 

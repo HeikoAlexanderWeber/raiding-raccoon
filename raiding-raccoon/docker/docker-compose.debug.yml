@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+    raiding-raccoon:
+        build:
+            context: ../
+            dockerfile: docker/Dockerfile.debug
+        container_name: raiding-raccoon
+        restart: "no"
+        security_opt: 
+            - "seccomp:unconfined"
+        tty: true
+        stdin_open: true
+        ports:
+            - 10101:10101 # delve debugging port
+        environment:
+            RR_START_URL: https://cassini.de

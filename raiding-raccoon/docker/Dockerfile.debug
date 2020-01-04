@@ -1,0 +1,29 @@
+### === Builder stage. === ###
+FROM golang:1.13-alpine as build-env
+
+ENV GOPATH /go
+ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
+
+# Debugging port
+EXPOSE 10101
+
+# Some updates.
+RUN apk update && apk upgrade
+RUN apk add make git ca-certificates
+
+RUN apk add libc6-compat
+RUN go get github.com/derekparker/delve/cmd/dlv
+
+# First copying the dependency information and download dependencies in order to
+# enable docker to cache the filesystem in this state.
+WORKDIR /app
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+
+# Add all the sourcecode and resources and execute a build.
+ADD . .
+
+ENV CGO_ENABLED 0
+ENTRYPOINT [ \
+    "/go/bin/dlv", "debug", "--listen=:10101", "--headless=true", "--api-version=2", "/app/program/src/cmd/main.go" ]
