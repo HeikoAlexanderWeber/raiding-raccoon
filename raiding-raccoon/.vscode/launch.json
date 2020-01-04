@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+            {
+                "name": "Delve into Docker",
+                "type": "go",
+                "request": "attach",
+                "mode": "remote",
+                "remotePath": "/app",
+                "port": 10101,
+                "host": "localhost",
+                "showLog": true,
+                "trace": "verbose"
+            }
+    ]
+}

@@ -2,9 +2,9 @@ package crawler
 
 import (
 	"net/url"
-	"raiding-raccoon/src/graph"
-	"raiding-raccoon/src/loader"
-	"raiding-raccoon/src/parser"
+	"raiding-raccoon/program/src/graph"
+	"raiding-raccoon/program/src/loader"
+	"raiding-raccoon/program/src/parser"
 	"sync"
 
 	log "github.com/sirupsen/logrus"

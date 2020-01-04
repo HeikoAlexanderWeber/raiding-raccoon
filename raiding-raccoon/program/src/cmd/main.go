@@ -5,18 +5,23 @@ import (
 	"net/url"
 	"os"
 
-	"raiding-raccoon/src/crawler"
-	"raiding-raccoon/src/graph"
-	"raiding-raccoon/src/loader"
-	"raiding-raccoon/src/parser"
-	"raiding-raccoon/src/writer"
+	"raiding-raccoon/program/src/crawler"
+	"raiding-raccoon/program/src/graph"
+	"raiding-raccoon/program/src/loader"
+	"raiding-raccoon/program/src/parser"
+	"raiding-raccoon/program/src/writer"
 
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/pflag"
 )
 
 // main func
 func main() {
+	f, err := os.OpenFile("./log", os.O_WRONLY|os.O_CREATE, 0755)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.StandardLogger().SetOutput(f)
+
 	// parsing configuration parameters
 	uri, err := configure()
 	if err != nil {
@@ -55,12 +60,8 @@ func configure() (*url.URL, error) {
 	}
 	log.Infof("Current working directory: %v", wd)
 
-	// define and parse flags
-	var startURI string
-	pflag.StringVar(&startURI, "start", "", "The start URI from which to go on crawling (including protocol)")
-	pflag.Parse()
-
 	// url.ParseRequestURI will need the protocol (http:// or https://)
+	startURI := os.Getenv("RR_START_URL")
 	uri, err := url.ParseRequestURI(startURI)
 	if err != nil {
 		log.Error(err)

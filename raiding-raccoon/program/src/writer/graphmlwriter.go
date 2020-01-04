@@ -2,7 +2,7 @@ package writer
 
 import (
 	"io"
-	"raiding-raccoon/src/graph"
+	"raiding-raccoon/program/src/graph"
 
 	"github.com/shabbyrobe/xmlwriter"
 )

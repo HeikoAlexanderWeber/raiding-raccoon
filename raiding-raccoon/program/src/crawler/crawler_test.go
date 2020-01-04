@@ -6,7 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/url"
-	"raiding-raccoon/src/graph"
+	"raiding-raccoon/program/src/graph"
 	"sort"
 	"testing"
 
