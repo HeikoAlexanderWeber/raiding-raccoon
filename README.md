@@ -1,8 +1,6 @@
 # raiding-raccoon
 
 [![LICENSE](https://img.shields.io/badge/license-MIT-orange.svg)](LICENSE)
-[![Build Status](https://travis-ci.com/HeikoAlexanderWeber/raiding-raccoon.svg?token=jLWKSu6GaoZv38y9JzqL&branch=master)](https://travis-ci.com/HeikoAlexanderWeber/raiding-raccoon)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c6a5c39e7bd042389370b22a3c98959f)](https://www.codacy.com/app/HeikoAlexanderWeber/raiding-raccoon?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=HeikoAlexanderWeber/raiding-raccoon&amp;utm_campaign=Badge_Grade)
 
 ## Stats
 
@@ -21,7 +19,7 @@
 
 ## Prerequisites
 
-* `Go` >= 1.12.0
+* `Go` >= 1.13.0
 
 ## Getting started
 
