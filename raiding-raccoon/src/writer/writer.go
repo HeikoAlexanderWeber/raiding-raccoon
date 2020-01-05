@@ -2,7 +2,7 @@ package writer
 
 import (
 	"io"
-	"raiding-raccoon/program/src/graph"
+	"raiding-raccoon/src/graph"
 )
 
 // Writer interface.

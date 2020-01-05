@@ -5,11 +5,11 @@ import (
 	"net/url"
 	"os"
 
-	"raiding-raccoon/program/src/crawler"
-	"raiding-raccoon/program/src/graph"
-	"raiding-raccoon/program/src/loader"
-	"raiding-raccoon/program/src/parser"
-	"raiding-raccoon/program/src/writer"
+	"raiding-raccoon/src/crawler"
+	"raiding-raccoon/src/graph"
+	"raiding-raccoon/src/loader"
+	"raiding-raccoon/src/parser"
+	"raiding-raccoon/src/writer"
 
 	log "github.com/sirupsen/logrus"
 )
