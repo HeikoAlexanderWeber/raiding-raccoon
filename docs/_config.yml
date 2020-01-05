@@ -1,1 +1,6 @@
 theme: jekyll-theme-cayman
+name: raiding-raccoon
+description: A website crawler written in Go.
+url: https://heikoalexanderweber.github.io/raiding-raccoon
+markdown: kramdown
+highlighter: rouge
