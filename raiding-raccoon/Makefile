@@ -30,21 +30,21 @@ install:
 build:
 	rm -rf bin && mkdir bin
 	#mkdir bin/res && cp -r res/certs bin/res
-	cd program/src/cmd && go build -o ../../../bin/$(PROGRAM) main.go
+	cd src/cmd && go build -o ../../../bin/$(PROGRAM) main.go
 
 format:
 	gofmt -s -w .
 
 test:
-	go test -v -coverpkg=./program/src/... -coverprofile ./program/test/coverage.out ./program/src/...
+	go test -v -coverpkg=./src/... -coverprofile ./test/coverage.out ./src/...
 
 bench:
-	go test -run=__ -bench=. -cpuprofile program/test/profile_cpu.out ./...
-	go tool pprof -svg program/test/profile_cpu.out > program/test/profile_cpu.svg
+	go test -run=__ -bench=. -cpuprofile test/profile_cpu.out ./...
+	go tool pprof -svg test/profile_cpu.out > test/profile_cpu.svg
 
 cover:
 	$(MAKE) test
-	go tool cover -html ./program/test/coverage.out
+	go tool cover -html ./test/coverage.out
 
 docker-build:
 	echo "Version: $(VERSION)"
