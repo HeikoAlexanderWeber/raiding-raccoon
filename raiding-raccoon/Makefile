@@ -30,7 +30,7 @@ install:
 build:
 	rm -rf bin && mkdir bin
 	#mkdir bin/res && cp -r res/certs bin/res
-	cd src/cmd && go build -o ../../../bin/$(PROGRAM) main.go
+	cd src/cmd && go build -o ../../bin/$(PROGRAM) main.go
 
 format:
 	gofmt -s -w .
