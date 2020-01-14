@@ -25,5 +25,4 @@ RUN go mod download
 ADD . .
 
 ENV CGO_ENABLED 0
-ENTRYPOINT [ \
-    "/go/bin/dlv", "debug", "--listen=:10101", "--headless=true", "--api-version=2", "/app/src/cmd/main.go" ]
+ENTRYPOINT [ "/go/bin/dlv", "debug", "--listen=:10101", "--headless=true", "--api-version=2", "/app/src/cmd/main.go" ]

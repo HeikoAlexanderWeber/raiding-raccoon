@@ -10,6 +10,7 @@ import (
 	"sort"
 	"testing"
 
+	cmap "github.com/orcaman/concurrent-map"
 	"gotest.tools/assert"
 )
 
@@ -24,7 +25,11 @@ func TestCrawler(t *testing.T) {
 
 	// parserMock always returns the same mock URI which would
 	// lead to an infinite loop
-	c.UseSelector(UniqueSelector())
+	uniqueMap := cmap.New()
+	c.UseSelector(UniqueSelector(
+		func(d string) bool {
+			return uniqueMap.SetIfAbsent(d, byte(0))
+		}))
 
 	uri0, _ := url.Parse("https://localhost:80/about")
 	c.Enlist(uri0)

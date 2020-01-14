@@ -3,8 +3,6 @@ package crawler
 import (
 	"net"
 	"net/url"
-
-	cmap "github.com/orcaman/concurrent-map"
 )
 
 // Selector type.
@@ -25,10 +23,9 @@ func DomainSelector(domain string) Selector {
 
 // UniqueSelector func.
 // Only approves URIs one time.
-func UniqueSelector() Selector {
-	set := cmap.New()
+func UniqueSelector(setIfAbsent func(string) bool) Selector {
 	return func(url *url.URL) bool {
-		return set.SetIfAbsent(url.String(), byte(0))
+		return setIfAbsent(url.String())
 	}
 }
 

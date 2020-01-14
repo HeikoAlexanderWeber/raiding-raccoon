@@ -15,7 +15,7 @@ type GraphMLWriter struct {
 }
 
 // Write func
-func (gmlw *GraphMLWriter) Write(graph graph.Graph, writer io.Writer) (err error) {
+func (gmlw *GraphMLWriter) Write(graph graph.Reader, writer io.Writer) (err error) {
 	// Don't pollute code with all the error checks. If something fails, the consistency
 	// of the xml is not guaranteed anymore. Therefore return an error.
 	defer func() {
@@ -54,7 +54,7 @@ func (gmlw *GraphMLWriter) Write(graph graph.Graph, writer io.Writer) (err error
 	return nil
 }
 
-func (gmlw *GraphMLWriter) writeGraph(writer *xmlwriter.Writer, source graph.Graph) error {
+func (gmlw *GraphMLWriter) writeGraph(writer *xmlwriter.Writer, source graph.Reader) error {
 	attrs := []xmlwriter.Attr{
 		{
 			Name:  "id",
@@ -77,7 +77,7 @@ func (gmlw *GraphMLWriter) writeGraph(writer *xmlwriter.Writer, source graph.Gra
 	return nil
 }
 
-func (gmlw *GraphMLWriter) writeNodes(writer *xmlwriter.Writer, source graph.Graph) error {
+func (gmlw *GraphMLWriter) writeNodes(writer *xmlwriter.Writer, source graph.Reader) error {
 	nodeChan := make(chan string)
 	go source.Nodes(nodeChan)
 	for node := range nodeChan {
@@ -95,7 +95,7 @@ func (gmlw *GraphMLWriter) writeNodes(writer *xmlwriter.Writer, source graph.Gra
 	return nil
 }
 
-func (gmlw *GraphMLWriter) writeEdges(writer *xmlwriter.Writer, source graph.Graph) error {
+func (gmlw *GraphMLWriter) writeEdges(writer *xmlwriter.Writer, source graph.Reader) error {
 	edgeChan := make(chan graph.Edge)
 	go source.Edges(edgeChan)
 	for edge := range edgeChan {
