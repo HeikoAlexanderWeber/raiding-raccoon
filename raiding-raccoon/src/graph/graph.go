@@ -1,8 +1,14 @@
 package graph
 
-// Graph interface.
-// Interface for a string to string reference graph.
+// Graph interface
 type Graph interface {
+	Writer
+	Reader
+}
+
+// Writer interface.
+// Interface for a string to string reference graph.
+type Writer interface {
 	// Will add a node to the graph if not already existing.
 	// Returns whether the process was successful.
 	AddNode(string) bool
@@ -10,6 +16,11 @@ type Graph interface {
 	// already exist. Nodes that do not exist yet will be created.
 	// Returns whether the reference was added successfully.
 	AddEdge(string, string) bool
+}
+
+// Reader interface
+// Interface for a string to string reference graph.
+type Reader interface {
 	// Will write all the nodes in the graph to the given channel.
 	Nodes(chan<- string)
 	// Will write all the edges in the graph to the given channel.

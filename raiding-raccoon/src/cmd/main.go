@@ -11,6 +11,7 @@ import (
 	"raiding-raccoon/src/parser"
 	"raiding-raccoon/src/writer"
 
+	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -23,35 +24,66 @@ func main() {
 	log.StandardLogger().SetOutput(f)
 
 	// parsing configuration parameters
-	uri, err := configure()
+	config, err := configure()
 	if err != nil {
 		panic(err)
 	}
-	log.Infof("Using URI: \"%v\" as start", uri)
+	log.Infof("Using URI: \"%v\" as start", config.StartURI)
 
 	// setting up the parts of the logic
-	graph := graph.NewConcurrentMapGraph()
-	c := crawler.NewCrawler(
-		uri.Scheme, uri.Host,
-		&loader.HTTPLoader{},
-		&parser.HTMLParser{},
-		graph)
-	c.UseSelector(
-		crawler.DomainSelector(crawler.RefineHostname(uri)),
-		crawler.UniqueSelector(),
-	)
-	// enlisting first URI in order to start crawling and wait for it to finish
-	c.Enlist(uri)
-	c.Wait()
+	informationIsCached := false
+	var g graph.Graph
+	if config.useRedis() {
+		redisGraph := graph.NewRedisGraph(config.StartURI.String(), true)
+		informationIsCached = redisGraph.Exists(config.StartURI.String(), true)
+		g = redisGraph
+	} else {
+		g = graph.NewConcurrentMapGraph()
+	}
+
+	if !informationIsCached {
+		c := crawler.NewCrawler(
+			config.StartURI.Scheme, config.StartURI.Host,
+			&loader.HTTPLoader{},
+			&parser.HTMLParser{},
+			g)
+
+		var uniqueMap graph.Writer
+		if config.useRedis() {
+			uid, _ := uuid.NewRandom()
+			uniqueMap = graph.NewRedisGraph(uid.String(), true)
+		} else {
+			uniqueMap = graph.NewConcurrentMapGraph()
+		}
+		c.UseSelector(
+			crawler.DomainSelector(crawler.RefineHostname(config.StartURI)),
+			crawler.UniqueSelector(
+				func(d string) bool {
+					return uniqueMap.AddNode(d)
+				}),
+		)
+		// enlisting first URI in order to start crawling and wait for it to finish
+		c.Enlist(config.StartURI)
+		c.Wait()
+	}
 
 	// export the result graph into STDOUT
 	writer := &writer.GraphMLWriter{}
-	if err := writer.Write(graph, os.Stdout); err != nil {
+	if err := writer.Write(g, os.Stdout); err != nil {
 		log.Errorf("Could not write graphml, %v", err)
 	}
 }
 
-func configure() (*url.URL, error) {
+type config struct {
+	StartURI      *url.URL
+	RedisBackbone string
+}
+
+func (c *config) useRedis() bool {
+	return c.RedisBackbone != ""
+}
+
+func configure() (*config, error) {
 	// print cwd, always good to have
 	wd, err := os.Getwd()
 	if err != nil {
@@ -67,5 +99,10 @@ func configure() (*url.URL, error) {
 		log.Error(err)
 		return nil, err
 	}
-	return uri, nil
+	redisBackbone := os.Getenv("RR_REDIS_BACKBONE")
+
+	return &config{
+		StartURI:      uri,
+		RedisBackbone: redisBackbone,
+	}, nil
 }

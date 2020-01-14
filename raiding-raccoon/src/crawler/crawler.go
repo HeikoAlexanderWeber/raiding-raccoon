@@ -17,7 +17,7 @@ type Crawler struct {
 	baseDomain   string
 	loader       loader.Loader
 	parser       parser.Parser
-	graph        graph.Graph
+	graph        graph.Writer
 	selectors    []Selector
 	parsersWg    sync.WaitGroup
 }
@@ -25,7 +25,7 @@ type Crawler struct {
 // NewCrawler func.
 // Returns a reference to a new crawler object.
 func NewCrawler(baseProtocol string, baseDomain string,
-	loader loader.Loader, parser parser.Parser, graph graph.Graph) *Crawler {
+	loader loader.Loader, parser parser.Parser, graph graph.Writer) *Crawler {
 	return &Crawler{
 		baseProtocol: baseProtocol,
 		baseDomain:   baseDomain,

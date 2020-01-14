@@ -10,5 +10,5 @@ import (
 type Writer interface {
 	// Writes the given reference graph into the given io.Writer.
 	// Returns any error that possibly occurred.
-	Write(graph.Graph, io.Writer) error
+	Write(graph.Reader, io.Writer) error
 }

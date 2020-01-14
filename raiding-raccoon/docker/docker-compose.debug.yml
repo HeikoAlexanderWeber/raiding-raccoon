@@ -14,4 +14,5 @@ services:
         ports:
             - 10101:10101 # delve debugging port
         environment:
-            RR_START_URL: https://cassini.de
+            RR_REDIS_BACKBONE: docker_redis_1:6379
+            RR_START_URL: https://orgadata.com
