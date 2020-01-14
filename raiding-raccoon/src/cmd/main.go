@@ -34,7 +34,7 @@ func main() {
 	informationIsCached := false
 	var g graph.Graph
 	if config.useRedis() {
-		redisGraph := graph.NewRedisGraph(config.StartURI.String(), true)
+		redisGraph := graph.NewRedisGraph(config.RedisBackbone, config.StartURI.String(), true)
 		informationIsCached = redisGraph.Exists(config.StartURI.String(), true)
 		g = redisGraph
 	} else {
@@ -51,7 +51,7 @@ func main() {
 		var uniqueMap graph.Writer
 		if config.useRedis() {
 			uid, _ := uuid.NewRandom()
-			uniqueMap = graph.NewRedisGraph(uid.String(), true)
+			uniqueMap = graph.NewRedisGraph(config.RedisBackbone, uid.String(), true)
 		} else {
 			uniqueMap = graph.NewConcurrentMapGraph()
 		}

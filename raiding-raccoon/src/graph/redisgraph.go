@@ -18,9 +18,9 @@ type RedisGraph struct {
 }
 
 // NewRedisGraph func
-func NewRedisGraph(id string, encodeID bool) *RedisGraph {
+func NewRedisGraph(address string, id string, encodeID bool) *RedisGraph {
 	client := redis.NewClient(&redis.Options{
-		Addr:     "docker_redis_1:6379",
+		Addr:     address,
 		Password: "",
 		DB:       0,
 	})
