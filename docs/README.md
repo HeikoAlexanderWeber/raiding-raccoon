@@ -52,6 +52,8 @@ Following environment variables are used by the container:
 
 * `RR_START_URL`\
     This variable defines the URL that the crawler starts at. The output will be in the GraphML format, written to the `STDOUT` pipe of the container.
+* `RR_REDIS_BACKBONE`\
+    Optional. Define a redis backbone to enable caching and optimize RAM usage.
 
 Example: `docker run -e RR_START_URL="https://cassini.de" raiding-raccoon:latest > cassini.graphml`
 
