@@ -1,7 +1,7 @@
 module raiding-raccoon
 
 require (
-	github.com/go-redis/redis/v7 v7.0.0-beta.5
+	github.com/go-redis/redis/v7 v7.1.0
 	github.com/google/go-cmp v0.3.0 // indirect
 	github.com/google/uuid v1.1.1
 	github.com/orcaman/concurrent-map v0.0.0-20190314100340-2693aad1ed75
