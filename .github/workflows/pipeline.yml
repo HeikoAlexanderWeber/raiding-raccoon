@@ -6,7 +6,7 @@ env:
 
 jobs:
   check:
-    name: setup
+    name: check
     runs-on: ubuntu-latest
     steps:
     - name: setup go
