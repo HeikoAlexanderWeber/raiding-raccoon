@@ -1,0 +1,111 @@
+name: pipeline
+on: push
+
+env:
+  RELEASE_FILE: RELEASE.txt
+
+jobs:
+  check:
+    name: check
+    runs-on: ubuntu-latest
+    steps:
+    - name: setup go
+      uses: actions/setup-go@v1
+      with: 
+        go-version: 1.13.x
+    - uses: actions/checkout@v1
+    - name: build
+      working-directory: ./raiding-raccoon
+      run: make docker-build
+    - name: test
+      working-directory: ./raiding-raccoon
+      run: make test
+    - name: scan
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  tag:
+    if: github.ref == 'refs/heads/master'
+    needs: check
+    name: tag
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Tag
+      id: tag
+      uses: anothrNick/github-tag-action@1.19.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WITH_V: false
+        RELEASE_BRANCHES: master
+        DEFAULT_BUMP: patch
+    - name: create release
+      id: create_release
+      uses: actions/create-release@latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.tag.outputs.new_tag}}
+        release_name: ${{ steps.tag.outputs.new_tag }}
+        body: |
+          Release ${{ steps.tag.outputs.new_tag }}.
+        draft: false
+        prerelease: false
+    - run: printf ${{ steps.create_release.outputs.upload_url }} > ${{ env.RELEASE_FILE }}
+    - name: Upload release data
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: RELEASE
+        path: ${{ env.RELEASE_FILE }}
+
+  publish-gpr:
+    needs: tag
+    name: publish to github package registry
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: get version
+      id: get_version
+      run: echo ::set-output name=VERSION::$(git tag --points-at HEAD --sort -version:refname | head -1)
+    - name: build image
+      working-directory: ./raiding-raccoon
+      run: VERSION=${{ steps.get_version.outputs.VERSION }} make docker-build
+
+    - name: publish
+      id: gpr-versioned
+      run: |
+        echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u ${GITHUB_ACTOR} --password-stdin
+        docker tag haw/raiding-raccoon:${{ steps.get_version.outputs.VERSION }} docker.pkg.github.com/replicadse/raiding-raccoon/raiding-raccoon:${{ steps.get_version.outputs.VERSION }}
+        docker push docker.pkg.github.com/replicadse/raiding-raccoon/raiding-raccoon:${{ steps.get_version.outputs.VERSION }}
+
+  publish-aws-ecr:
+    needs: tag
+    name: publish to aws ecr
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: get version
+      id: get_version
+      run: echo ::set-output name=VERSION::$(git tag --points-at HEAD --sort -version:refname | head -1)
+    - name: build image
+      working-directory: ./raiding-raccoon
+      run: VERSION=${{ steps.get_version.outputs.VERSION }} make docker-build
+    - name: push to aws ecr (versioned tag)
+      id: ecr-versioned
+      uses: jwalton/gh-ecr-push@v1
+      with:
+        access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        region: eu-central-1
+        image: haw/raiding-raccoon:${{ steps.get_version.outputs.VERSION }}
+    - name: push to aws ecr (latest tag)
+      id: ecr-latest
+      uses: jwalton/gh-ecr-push@v1
+      with:
+        access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        region: eu-central-1
+        image: haw/raiding-raccoon:latest
+        local-image: haw/raiding-raccoon:${{ steps.get_version.outputs.VERSION }}
