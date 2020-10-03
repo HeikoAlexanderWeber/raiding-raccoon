@@ -1,4 +1,4 @@
-version: "3.7"
+version: '3.7'
 
 services:
     raiding-raccoon:
@@ -6,13 +6,31 @@ services:
             context: ../
             dockerfile: docker/Dockerfile.debug
         container_name: raiding-raccoon
-        restart: "no"
+        restart: 'no'
         security_opt: 
-            - "seccomp:unconfined"
+            - 'seccomp:unconfined'
         tty: true
         stdin_open: true
         ports:
             - 10101:10101 # delve debugging port
         environment:
-            RR_REDIS_BACKBONE: docker_redis_1:6379
+            RR_REDIS_BACKBONE: redis:6379
             RR_START_URL: https://orgadata.com
+
+    redis:
+        hostname: redis
+        image: redis:latest
+        restart: unless-stopped
+        ports:
+            - '127.0.0.1:6379:6379'
+
+    redis-commander:
+        hostname: redis-commander
+        image: rediscommander/redis-commander:latest
+        restart: unless-stopped
+        depends_on:
+            - redis
+        ports:
+            - '127.0.0.1:6380:8081'
+        environment:
+            - REDIS_HOST=redis

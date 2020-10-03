@@ -21,13 +21,9 @@
 
 * `Go` >= 1.13.0
 
-## Getting started
-
-For setting up the environment, simply call `sh scripts/setup.sh`.
-
 ## Commands
 
-* `make install` for downloading dependencies (done in `setup.sh`)
+* `make install` for downloading dependencies
 * `make format` for formatting the code using `gofmt`
 * `make docker-build` for building the production grade docker image
 * `make docker-build-debug` for building the debug docker image
