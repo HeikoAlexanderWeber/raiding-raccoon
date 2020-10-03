@@ -23,7 +23,7 @@
 
 ## Getting started
 
-For setting up the environment, just call `sh scripts/setup.sh`.
+For setting up the environment, simply call `sh scripts/setup.sh`.
 
 ## Commands
 
